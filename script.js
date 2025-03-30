@@ -105,8 +105,8 @@ document.querySelectorAll(".pick").forEach((pick, index) => {
             p.style.border = "1px solid white";
         });
         pick.classList.add("chosen");
-	pick.style.transform = "rotate(-10deg) scale(1.06)";
-        pick.style.border = "3px solid white";
+	pick.style.transform = "rotate(-8deg) scale(1.04)";
+        pick.style.border = "2px solid white";
         selected = index === 0 ? choice1 : choice2;
     });
 });
