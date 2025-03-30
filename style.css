@@ -33,6 +33,7 @@
 	background-color: #555555;
     border-radius: 15px;
     border: solid 1px #fff;
+	transform: scale(1.01);
 }
 
 .Nickname {
