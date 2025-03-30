@@ -91,6 +91,8 @@ function updateUI() {
     document.querySelectorAll(".pick").forEach(p => {
         p.classList.remove("chosen");
         p.style.border = "1px solid white";
+	p.style.transition = "all 0.05s";
+        p.style.transform = "none";
     });
     submitButton.disabled = false; // Enable the submit button after reset
 }
@@ -99,9 +101,11 @@ document.querySelectorAll(".pick").forEach((pick, index) => {
     pick.addEventListener("click", () => {
         document.querySelectorAll(".pick").forEach(p => {
             p.classList.remove("chosen");
+	    p.style.transform = "none";
             p.style.border = "1px solid white";
         });
         pick.classList.add("chosen");
+	pick.style.transform = "rotate(-10deg) scale(1.06)";
         pick.style.border = "3px solid white";
         selected = index === 0 ? choice1 : choice2;
     });
