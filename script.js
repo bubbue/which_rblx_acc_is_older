@@ -82,12 +82,14 @@ function getRandomAccounts() {
 function flashBackground(color) {
     const body = document.body;
     body.style.transition = "none";
-    body.style.backgroundColor = color; // Instantly change color
+    body.style.backgroundColor = color;
+    body.offsetHeight;// Instantly change color
     setTimeout(() => {
         body.style.transition = "background-color 1.5s ease";
         body.style.backgroundColor = "";
     }, 50); // Delay to ensure instant change before fading
 }
+
 
 
 
