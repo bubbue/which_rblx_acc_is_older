@@ -79,6 +79,15 @@ function getRandomAccounts() {
     return [shuffled[0], shuffled[1]];
 }
 
+function flashBackground(color) {
+    const body = document.body;
+    body.style.transition = "background-color 0.5s ease";
+    body.style.backgroundColor = color;
+    setTimeout(() => {
+        body.style.backgroundColor = "";
+    }, 2000);
+}
+
 function updateUI() {
     [choice1, choice2] = getRandomAccounts();
     const picks = document.querySelectorAll(".pick");
@@ -117,8 +126,10 @@ submitButton.addEventListener("click", () => {
     const correct = choice1.date.getTime() < choice2.date.getTime() ? choice1 : choice2;
     if (selected.name === correct.name) {
         resultText.textContent = `Correct! ${correct.name} was created on ${correct.date.toDateString()}!`;
+	flashBackground("darkgreen");
     } else {
         resultText.textContent = `Wrong! The correct answer is ${correct.name}, created on ${correct.date.toDateString()}.`;
+	flashBackground("darkred");
     }
     resultText.style.display = "block";
     setTimeout(updateUI, 3000);
