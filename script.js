@@ -245,10 +245,19 @@ const sounds = {
 };
 
 function getRandomAccounts() {
-    let shuffled;
-    do {
-        shuffled = [...accounts].sort(() => 0.5 - Math.random());
-    } while (shuffled[0].date.getTime() === shuffled[1].date.getTime());
+    // Skopiuj tablicę, żeby nie modyfikować oryginału
+    let shuffled = [...accounts];
+    // Fisher-Yates shuffle
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    // Upewnij się, że dwa pierwsze elementy mają różne daty utworzenia
+    while (shuffled[0].date.getTime() === shuffled[1].date.getTime()) {
+        // losuj indeks od 2 do końca tablicy i zamień z drugim elementem
+        let j = 2 + Math.floor(Math.random() * (shuffled.length - 2));
+        [shuffled[1], shuffled[j]] = [shuffled[j], shuffled[1]];
+    }
     return [shuffled[0], shuffled[1]];
 }
 
