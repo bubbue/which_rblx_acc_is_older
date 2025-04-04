@@ -238,6 +238,15 @@ const resultText = document.querySelector(".hiddenshown");
 let selected = null;
 let choice1, choice2;
 
+let currentStreak = 0;
+let record = localStorage.getItem('record') ? parseInt(localStorage.getItem('record')) : 0;
+const streakElem = document.querySelector(".streak");
+
+function updateStreakDisplay() {
+    streakElem.textContent = `Streak: ${currentStreak} | Record: ${record}`;
+}
+updateStreakDisplay();
+
 const sounds = {
     click: new Audio('Sounds/SWITCH3.ogg'),
     correct: new Audio('Sounds/victory.ogg'),
@@ -291,8 +300,7 @@ function updateUI() {
 
 document.querySelectorAll(".pick").forEach((pick, index) => {
     pick.addEventListener("click", () => {
-		sounds.click.play()
-		
+        sounds.click.play();
         document.querySelectorAll(".pick").forEach(p => {
             p.classList.remove("chosen");
             p.style.transform = "none";
@@ -315,6 +323,7 @@ submitButton.addEventListener("click", () => {
     const correctPick = correct.name === choice1.name ? picks[0] : picks[1];
     const wrongPick = selectedPick !== correctPick ? selectedPick : null;
     
+    // Pokazujemy daty tylko po zatwierdzeniu wyboru:
     picks.forEach((pick, index) => {
         const acc = index === 0 ? choice1 : choice2;
         const dateElem = pick.querySelector(".date");
@@ -328,6 +337,11 @@ submitButton.addEventListener("click", () => {
         flashBackground("darkgreen");
         correctPick.style.transform = "rotate(-4deg) scale(1.1) translateY(-1.1rem)";
         correctPick.style.border = "2px solid white";
+        currentStreak++;
+        if (currentStreak > record) {
+            record = currentStreak;
+            localStorage.setItem('record', record);
+        }
     } else {
         sounds.wrong.play();
         resultText.textContent = `Wrong! The correct answer is ${correct.name}, created on ${correct.date.toDateString()}.`;
@@ -340,9 +354,11 @@ submitButton.addEventListener("click", () => {
             wrongPick.style.transform = "none";
             wrongPick.style.border = "1px solid white";
         }
+        currentStreak = 0;
     }
+    updateStreakDisplay();
     resultText.style.display = "block";
-    
     setTimeout(updateUI, 3000);
 });
+
 updateUI();
