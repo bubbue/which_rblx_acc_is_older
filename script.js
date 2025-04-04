@@ -245,16 +245,12 @@ const sounds = {
 };
 
 function getRandomAccounts() {
-    // Skopiuj tablicę, żeby nie modyfikować oryginału
     let shuffled = [...accounts];
-    // Fisher-Yates shuffle
     for (let i = shuffled.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
-    // Upewnij się, że dwa pierwsze elementy mają różne daty utworzenia
     while (shuffled[0].date.getTime() === shuffled[1].date.getTime()) {
-        // losuj indeks od 2 do końca tablicy i zamień z drugim elementem
         let j = 2 + Math.floor(Math.random() * (shuffled.length - 2));
         [shuffled[1], shuffled[j]] = [shuffled[j], shuffled[1]];
     }
@@ -279,6 +275,10 @@ function updateUI() {
         const choice = index === 0 ? choice1 : choice2;
         pick.querySelector(".Image").src = `Images/${choice.name}.webp`;
         pick.querySelector(".Nickname").textContent = choice.name;
+        // Ukrywamy datę, bo domyślnie ma być niewidoczna, nya~
+        const dateElem = pick.querySelector(".date");
+        dateElem.textContent = "";
+        dateElem.style.display = "none";
         pick.classList.remove("chosen");
         pick.style.border = "1px solid white";
         pick.style.transition = "all 0.05s";
@@ -315,21 +315,26 @@ submitButton.addEventListener("click", () => {
     const correctPick = correct.name === choice1.name ? picks[0] : picks[1];
     const wrongPick = selectedPick !== correctPick ? selectedPick : null;
     
+    picks.forEach((pick, index) => {
+        const acc = index === 0 ? choice1 : choice2;
+        const dateElem = pick.querySelector(".date");
+        dateElem.textContent = acc.date.toDateString();
+        dateElem.style.display = "block";
+    });
+    
     if (selected.name === correct.name) {
-		sounds.correct.play()
+        sounds.correct.play();
         resultText.textContent = `Correct! ${correct.name} was created on ${correct.date.toDateString()}!`;
         flashBackground("darkgreen");
-		correctPick.style.transform = "rotate(-4deg) scale(1.1) translateY(-1.1rem)";
+        correctPick.style.transform = "rotate(-4deg) scale(1.1) translateY(-1.1rem)";
         correctPick.style.border = "2px solid white";
     } else {
-		sounds.wrong.play()
+        sounds.wrong.play();
         resultText.textContent = `Wrong! The correct answer is ${correct.name}, created on ${correct.date.toDateString()}.`;
         flashBackground("darkred");
-        
         correctPick.style.transform = "rotate(-3deg) scale(1.1) translateY(-1.1rem)";
         correctPick.style.border = "2px solid white";
         correctPick.classList.add("chosen");
-        
         if (wrongPick) {
             wrongPick.classList.remove("chosen");
             wrongPick.style.transform = "none";
@@ -337,7 +342,7 @@ submitButton.addEventListener("click", () => {
         }
     }
     resultText.style.display = "block";
+    
     setTimeout(updateUI, 3000);
 });
-
 updateUI();
